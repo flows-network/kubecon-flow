@@ -6,7 +6,7 @@ use wasmedge_bindgen_macro::*;
 
 fn detail(item: (i64, &str, &str, &str)) -> String {
     format!(
-        "Next session is {}.\n\nTime: {}\nLocation: {}\nLink: {}",
+        "Next session is \n{}.\n\nTime: {}\nLocation: {}\nLink: {}",
         item.1,
         NaiveDateTime::from_timestamp(item.0 as i64, 0).to_string(),
         item.2,
@@ -163,5 +163,5 @@ Omdia",
     .map(|item| detail(item))
     .unwrap_or("Kubecon is over.".to_string());
 
-    outbound::say(info, None).build()
+    outbound::say(info, Some(message)).build()
 }
