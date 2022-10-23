@@ -14,10 +14,10 @@ fn detail(
     ),
 ) -> String {
     format!(
-        "Next session for Cloud Native Wasm Day NA is \n{}.\n\nTime: {} - {}\nLocation: {}\nLearn more: {}",
+        "Next session for Cloud Native Wasm Day NA is \n{}.\n\nTime: {} - {} EDT\nLocation: {}\nLearn more: {}",
         item.2,
-        item.0,
-        item.1,
+        item.0.format("%a %b %e • %H:%M"),
+        item.1.format("%H:%M"),
         item.3,
         item.4,
     )
@@ -34,7 +34,7 @@ pub fn run(s: String) -> Result<String, String> {
     let now = Utc::now();
     let date = Utc
         .ymd(2022, 10, 24)
-        .with_timezone(&FixedOffset::west(4 * 3600));
+        .with_timezone(&FixedOffset::east(4 * 3600));
 
     let info = [(
         date.and_hms(9, 0, 0),
