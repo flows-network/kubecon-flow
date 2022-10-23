@@ -19,7 +19,7 @@ fn detail(item: (DateTime<Utc>, DateTime<Utc>, &str, &str, &str)) -> String {
 pub fn run(s: String) -> Result<String, String> {
     let message = inbound(s)?;
 
-    if message.content != "/w" && message.content != "/wasm" {
+    if message.content != "/n" && message.content != "/next" {
         return Ok(String::new());
     }
 
