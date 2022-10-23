@@ -1,16 +1,17 @@
-use chrono::{NaiveDateTime, Utc};
+use chrono::{Utc, TimeZone, DateTime};
 use flows_connector_dsi::discord::*;
 #[allow(unused_imports)]
 use wasmedge_bindgen::*;
 use wasmedge_bindgen_macro::*;
 
-fn detail(item: (i64, &str, &str, &str)) -> String {
+fn detail(item: (DateTime<Utc>, DateTime<Utc>, &str, &str, &str)) -> String {
     format!(
-        "Next session for Cloud Native Wasm Day NA is \n{}.\n\nStart Time: {}\nLocation: {}\nLearn more: {}",
-        item.1,
-        NaiveDateTime::from_timestamp(item.0 as i64, 0).to_string(),
+        "Next session for Cloud Native Wasm Day NA is \n{}.\n\nTime: {} - {}\nLocation: {}\nLearn more: {}",
         item.2,
+        item.0,
+        item.1,
         item.3,
+        item.4,
     )
 }
 
@@ -18,134 +19,154 @@ fn detail(item: (i64, &str, &str, &str)) -> String {
 pub fn run(s: String) -> Result<String, String> {
     let message = inbound(s)?;
 
-    if message.content != "/wasm" {
+    if message.content != "/w" && message.content != "/wasm" {
         return Ok(String::new());
     }
 
-    let now = Utc::now().timestamp();
+    let now = Utc::now();
+    let date = Utc.ymd(2022, 10, 24);
 
     let info = [(
-        1666616400,
+        date.and_hms(9, 0, 0),
+        date.and_hms(9, 10, 0),
         "Welcome + Opening Remarks - Kate Goldenring, Senior Software Engineer, Fermyon Technologies, Inc. ",
         "Room 310 A",
         "https://cloudnativewasmdayna22.sched.com/event/1AUD4",
     ),
     (
-        1666617300,
+        date.and_hms(9, 15, 0),
+        date.and_hms(9, 45, 0),
         "Keynote: The Path to Components - Luke Wagner, Distinguished Engineer, 
 Fastly ",
         "Room 310 A",
         "https://cloudnativewasmdayna22.sched.com/event/1AUD7"
     ),
     (
-        1666619400,
+        date.and_hms(9, 50, 0),
+        date.and_hms(9, 55, 0),
         "Keynote: WebAssembly Development is Easy - Matt Butcher, CEO & Radu Matei, 
 CTO, Fermyon Technologies, Inc.",
         "Room 310 A",
         "https://cloudnativewasmdayna22.sched.com/event/1AUDA"
     ),
     (
-        1666620000
+        date.and_hms(10, 0, 0),
+        date.and_hms(10, 5, 0),
         "Keynote: Wasm: A Revolution for Browsers, Containers, and the Cloud - 
 Justin Cormack, Chief Technology Officer, Docker",
         "Room 310 A",
         "https://cloudnativewasmdayna22.sched.com/event/1AUDD/"
     ),
     (
-        1666620600,
+        date.and_hms(10, 10, 0),
+        date.and_hms(10, 40, 0),
         "The JVM Meets WASI: Writing Cloud-Friendly Wasm Apps Using Java and Friends 
 - Joel Dice, Fermyon Technologies, Inc.",
         "Room 310 A",
         "https://cloudnativewasmdayna22.sched.com/event/1AUDG/"
     ),
     (
-        1666622400,
+        date.and_hms(10, 40, 0),
+        date.and_hms(10, 50, 0),
         "Coffee Break",
         "Room 310 A",
         "https://cloudnativewasmdayna22.sched.com/event/1AUDJ/"
     ),
     (
-        1666623000,
+        date.and_hms(10, 50, 0),
+        date.and_hms(11, 20, 0),
         "Porting Python to WebAssembly - Christian Heimes, Red Hat ",
         "Room 310 A",
         "https://cloudnativewasmdayna22.sched.com/event/1AUDP"
     ),
     (
-        1666625100,
+        date.and_hms(11, 25, 0),
+        date.and_hms(11, 55, 0),
         "Build, Share, Run WebAssembly Apps Using the Docker Toolchain - Chris 
         Crone, Docker & Michael Yuan, Second State ",
         "Room 310 A",
         "https://cloudnativewasmdayna22.sched.com/event/1AUDh/"
     ),
     (
-        1666627200,
+        date.and_hms(12, 0, 0),
+        date.and_hms(12, 10, 0),
         "⚡ Lightning Talk: SIG-Registries and Standardizing Package Management in 
         WebAssembly - Bailey Hayes, Cosmonic and Kyle Brown, SingleStore",
         "Room 310 A",
         "https://cloudnativewasmdayna22.sched.com/event/1AUDe/"
     ),
     (
-        1666628100,
+        date.and_hms(12, 15, 0),
+        date.and_hms(12, 25, 0),
         "⚡ Lightning Talk: Revolutionizing Application Architecture with Wasm 
 Powered Database Extensibility - Carl Sverre, SingleStore ",
         "Room 310 A",
         "https://cloudnativewasmdayna22.sched.com/event/1AUDV"
     ),
     (
-        1666628700,
+        date.and_hms(12, 25, 0),
+        date.and_hms(13, 25, 0),
         "🍲 Lunch + Networking",
         "3rd Floor Foyer",
         "https://cloudnativewasmdayna22.sched.com/event/1AUDY/lunch-networking"
     ),
     (
-        1666632300,
+        date.and_hms(13, 25, 0),
+        date.and_hms(13, 35, 0),
         "⚡ Lightning Talk: Implementing Wasm Debugging with .net in vscode - Thays 
 Tagliaferri de Grazia, Microsoft",
         "Room 310 A",
         "https://cloudnativewasmdayna22.sched.com/event/1AUDS"
     ),
     (
-        1666633200,
+        date.and_hms(13, 40, 0),
+        date.and_hms(13, 50, 0),
         "⚡ Lightning Talk: Wildly Distributed Programming: Wasm and the Future of 
 Distributed Computing - Brooks Townsend, Cosmonic",
         "Room 310 A",
         "https://cloudnativewasmdayna22.sched.com/event/1AUDb/"
     ),
     (
-        1666634100,
+        date.and_hms(13, 55, 0),
+        date.and_hms(14, 25, 0),
         "C# and Wasm Interface Types: Hands Across the C - Ivan Towlson, Fermyon ",
         "Room 310 A",
         "https://cloudnativewasmdayna22.sched.com/event/1AUDM/"
     ),
     (
-        1666636200,
+        date.and_hms(14, 30, 0),
+        date.and_hms(15, 0, 0),
         "Mod_Wasm: Bringing WebAssembly to Apache - Daniel Lopez Ridruejo & Rafael 
 Fernandez Lopez, VMware",
         "Room 310 A",
         "https://cloudnativewasmdayna22.sched.com/event/1AUDk/"
     ),
     (
-        1666638000,
+        date.and_hms(15, 0, 0),
+        date.and_hms(15, 10, 0),
         "☕ Coffee Break + Networking",
         "3rd Floor Foyer",
         "https://cloudnativewasmdayna22.sched.com/event/1AUDn/"
     ),
     (
-        1666638600,
+        date.and_hms(15, 10, 0),
+        date.and_hms(15, 40, 0),
         "Wasm Components: The Interchangeable Parts of Software - Taylor Thomas, 
 Cosmonic",
         "Room 310 A",
         "https://cloudnativewasmdayna22.sched.com/event/1AUDq/"
     ),
     (
-        1666640700,
+        date.and_hms(15, 45, 0),
+        date.and_hms(16, 15, 0),
         "Bring Your Own Bytecode to the Logging Party - Guba Sándor & Dudas Adam, 
 Cisco",
         "Room 310 A",
         "https://cloudnativewasmdayna22.sched.com/event/1AUDt/"
     ),
     (
-        1666642800,
+        date.and_hms(16, 20, 0),
+        date.and_hms(17, 0, 0),
         "Panel Discussion: WebAssembly - Outside In - Moderated by Bailey Hayes, 
 Cosmonic; Renee Shah, Amplify, Alex Williams, Newstack & Michael Azoff, 
 Omdia",
@@ -153,7 +174,8 @@ Omdia",
         "https://cloudnativewasmdayna22.sched.com/event/1AUDw"
     ),
     (
-        1666645500,
+        date.and_hms(17, 5, 0),
+        date.and_hms(17, 10, 0),
         "Closing Remarks - Connor Hicks, Founder & CEO, Suborbital ",
         "Room 310 A",
         "https://cloudnativewasmdayna22.sched.com/event/1AUDz/"
