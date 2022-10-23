@@ -1,10 +1,18 @@
-use chrono::{Utc, TimeZone, DateTime};
+use chrono::{DateTime, FixedOffset, TimeZone, Utc};
 use flows_connector_dsi::discord::*;
 #[allow(unused_imports)]
 use wasmedge_bindgen::*;
 use wasmedge_bindgen_macro::*;
 
-fn detail(item: (DateTime<Utc>, DateTime<Utc>, &str, &str, &str)) -> String {
+fn detail(
+    item: (
+        DateTime<FixedOffset>,
+        DateTime<FixedOffset>,
+        &str,
+        &str,
+        &str,
+    ),
+) -> String {
     format!(
         "Next session for Cloud Native Wasm Day NA is \n{}.\n\nTime: {} - {}\nLocation: {}\nLearn more: {}",
         item.2,
@@ -24,7 +32,9 @@ pub fn run(s: String) -> Result<String, String> {
     }
 
     let now = Utc::now();
-    let date = Utc.ymd(2022, 10, 24);
+    let date = Utc
+        .ymd(2022, 10, 24)
+        .with_timezone(&FixedOffset::west(4 * 3600));
 
     let info = [(
         date.and_hms(9, 0, 0),
