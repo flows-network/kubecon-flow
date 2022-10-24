@@ -34,7 +34,7 @@ pub fn run(s: String) -> Result<String, String> {
     let now = Utc::now();
     let date = Utc
         .ymd(2022, 10, 24)
-        .with_timezone(&FixedOffset::east(4 * 3600));
+        .with_timezone(&FixedOffset::west(4 * 3600));
 
     let info = [(
         date.and_hms(9, 0, 0),
